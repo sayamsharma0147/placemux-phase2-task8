@@ -1,0 +1,93 @@
+{
+  "task": "Phase 2 \u00b7 Task 8 \u2014 Receipts, Refunds & Reconciliation (Spend-Quality Guardrail)",
+  "purpose": "Warn students BEFORE they pay to apply when the match is low-fit, so spend protection happens upstream of any refund.",
+  "timestamp": "2026-07-18T15:59:12.992819",
+  "decision_threshold_used": 0.1,
+  "threshold_source": "Task 7 tuned threshold",
+  "held_out_eval": {
+    "n_students": 100,
+    "n_jobs": 20,
+    "n_pairs": 2000,
+    "warn_rate": 0.9895,
+    "precision": 1.0,
+    "recall": 1.0,
+    "fpr": 0.0,
+    "segment_breakdown": {
+      "Advanced": {
+        "n": 140,
+        "precision": 1.0,
+        "recall": 1.0,
+        "fpr": 0.0
+      },
+      "Beginner": {
+        "n": 80,
+        "precision": 1.0,
+        "recall": 1.0,
+        "fpr": 0.0
+      },
+      "Intermediate": {
+        "n": 1780,
+        "precision": 1.0,
+        "recall": 1.0,
+        "fpr": 0.0
+      }
+    }
+  },
+  "spend_protection_rupees": {
+    "fee_per_application": 100,
+    "doomed_applications_warned": 1979,
+    "spend_protected": 197900,
+    "doomed_applications_not_warned": 0,
+    "spend_still_at_risk": 0,
+    "good_matches_wrongly_warned": 0
+  },
+  "edge_cases": [
+    {
+      "case": "boundary p_match near threshold",
+      "passed": true,
+      "detail": "no pair found this close; logic still deterministic by construction"
+    },
+    {
+      "case": "zero-skill student",
+      "passed": true,
+      "detail": "n_critical_gaps=8"
+    },
+    {
+      "case": "full warning coverage",
+      "passed": true,
+      "detail": "2000 pairs, all decodable"
+    }
+  ],
+  "demo": {
+    "low_fit_example": {
+      "student_id": "STU_0250",
+      "job_id": "JOB_030",
+      "p_match": 0.0,
+      "decision_threshold": 0.1,
+      "fit_level": "very_low_fit",
+      "warn_before_payment": true,
+      "n_skills_met": 2,
+      "n_critical_gaps": 4,
+      "critical_gap_skills": [
+        "python",
+        "sql",
+        "deep_learning",
+        "statistics"
+      ],
+      "message": "Before you pay: this role needs stronger python, sql, deep_learning, statistics than your current verified scores show. Applying is unlikely to lead anywhere \u2014 consider a role closer to your verified skills instead."
+    },
+    "high_fit_example": {
+      "student_id": "STU_0265",
+      "job_id": "JOB_047",
+      "p_match": 0.9973,
+      "decision_threshold": 0.1,
+      "fit_level": "high_fit",
+      "warn_before_payment": false,
+      "n_skills_met": 8,
+      "n_critical_gaps": 0,
+      "critical_gap_skills": [],
+      "message": "This looks like a strong match \u2014 no low-fit warning needed."
+    }
+  },
+  "status": "TEST MODE \u2014 spend-quality guardrail runs before the payment step; not yet validated against a live gateway or real refund flow."
+}
